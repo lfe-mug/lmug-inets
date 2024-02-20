@@ -62,9 +62,7 @@ lfe> (set app (clj:-> (lmug:app)
                       (lmug-mw-resource:wrap #m(doc-root "static"))
                       (lmug-mw-status-body:wrap)
                       (lmug-mw-log-request:wrap #m(log-level notice))))
-```
 
-```lisp
 lfe> (lmug-inets:start app #m(port 5099))
 ```
 
