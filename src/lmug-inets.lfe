@@ -24,9 +24,7 @@
 
 (defun start (handler opts-map)
   "Start the inets http server."
-  (let* ((doc-root (case (lmug-state:get-docroot)
-                     ('undefined (lmug-inets-opts:doc-root))
-                     (root root)))
+  (let* ((doc-root (maps:get 'doc-root opts-map (lmug-inets-opts:doc-root)))
          (opts-map  `#m(server_name ,(maps:get 'name opts-map (lmug-inets-opts:server-name))
                         port ,(maps:get 'port opts-map (lmug-inets-opts:port))
                         server_root ,doc-root

@@ -5,14 +5,13 @@
 [![Erlang Versions][erlang-badge]][versions]
 [![Tags][github-tags-badge]][github-tags]
 
-*An lmug adapter for the OTP inets web server*
+*An lmug adapter for the Nova web server*
 
 [![][logo]][logo-large]
 
 ##### Contents
 
 * [Introduction](#introduction-)
-  * [EWSAPI](#ewsapi-)
 * [Installation](#installation-)
 * [Documentation](#documentation-)
 * [Usage](#usage-)
@@ -35,8 +34,8 @@ checkout [our EWSAPI & lmug notes](./docs/ewsapi.md).
 
 ```erlang
 {deps, [
-   {lmug-inets, "0.1.1", {pkg, lmug_inets}}
-  ]}.
+   {lmug-inets, "0.2.0", {pkg, lmug_inets}}
+]}.
 ```
 
 ## Documentation [&#x219F;](#contents)
@@ -59,17 +58,22 @@ echo "<html><body>lmug-inets dev server</body></html>" > static/index.html
 lfe> (set app (clj:-> (lmug:app)
                       (lmug-mw-request-id:wrap)
                       (lmug-mw-content-type:wrap)
-                      (lmug-mw-resource:wrap #m(doc-root "static"))
+                      (lmug-mw-resource:wrap #m(doc-root "static"
+                                                port 5099
+                                                watch? true))
                       (lmug-mw-status-body:wrap)
                       (lmug-mw-log-request:wrap #m(log-level notice))))
 
-lfe> (lmug-inets:start app #m(port 5099))
+lfe> (lmug-inets:start
+      app
+      `#m(doc-root ,(lmug-mw-resource:doc-root)
+          port 5099))
 ```
 
 This can be tested from another terminal with `curl`:
 
 ``` shell
-curl -v "http://alice:sekr1t@localhost:5099/response.txt"
+curl -v "http://alice:sekr1t@localhost:5099/index.html"
 ```
 
 Which will give something like the following:
@@ -78,21 +82,22 @@ Which will give something like the following:
 *   Trying 127.0.0.1:5099...
 * Connected to localhost (127.0.0.1) port 5099 (#0)
 * Server auth using Basic with user 'alice'
-> GET /response.txt HTTP/1.1
+> GET /index.html HTTP/1.1
 > Host: localhost:5099
 > Authorization: Basic YWxpY2U6c2VrcjF0
 > User-Agent: curl/8.1.2
 > Accept: */*
 >
 < HTTP/1.1 200 OK
-< Date: Tue, 20 Feb 2024 01:41:26 GMT
+< Date: Wed, 06 Mar 2024 07:13:21 GMT
 < Server: inets/9.1 (unix/darwin) OTP/26
-< X-Request-ID: 11548829628205025075258581696865370112
-< Content-Type: text/plain
-< Content-Length: 3
+< Content-Type: text/html
+< Etag: tDBVKx47
+< Content-Length: 47
+< Last-Modified: Sat, 02 Mar 2024 03:10:48 GMT
 <
+<html><body>lmug-nova dev server</body></html>
 * Connection #0 to host localhost left intact
-200
 ```
 
 Then, to test the static resource middleware:
@@ -139,8 +144,8 @@ Distributed under the Apache License, Version 2.0.
 
 [//]: ---Named-Links---
 
-[logo]: priv/images/lmug-inets.png
-[logo-large]: priv/images/lmug-inets-large.png
+[logo]: priv/images/lmug.png
+[logo-large]: priv/images/lmug-large.png
 [gh-actions-badge]: https://github.com/lfe-mug/lmug-inets/workflows/ci%2Fcd/badge.svg
 [gh-actions]: https://github.com/lfe-mug/lmug-inets/actions
 [lfe]: https://github.com/lfe/lfe
