@@ -22,7 +22,9 @@
           #(content_length ,(integer_to_list (size body)))))))
 
 (defun content-type (headers ct-key)
-  (let ((ct (mref headers ct-key)))
-    (if (is_binary ct)
-      (binary_to_list ct)
-      ct)))
+  (case (maps:get ct-key headers 'undefined)
+    ('undefined (binary_to_list
+                 (lmug:default-content-type)))
+    (ct (if (is_binary ct)
+          (binary_to_list ct)
+          ct))))

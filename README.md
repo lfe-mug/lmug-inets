@@ -58,16 +58,12 @@ echo "<html><body>lmug-inets dev server</body></html>" > static/index.html
 lfe> (set app (clj:-> (lmug:app)
                       (lmug-mw-request-id:wrap)
                       (lmug-mw-content-type:wrap)
-                      (lmug-mw-resource:wrap #m(doc-root "static"
-                                                port 5099
-                                                watch? true))
                       (lmug-mw-status-body:wrap)
+                      (lmug-mw-resource:wrap #m(doc-root "static"
+                                                watch? true))
                       (lmug-mw-log-request:wrap #m(log-level notice))))
 
-lfe> (lmug-inets:start
-      app
-      `#m(doc-root ,(lmug-mw-resource:doc-root)
-          port 5099))
+lfe> (lmug-inets:start app `#m(port 5099))
 ```
 
 This can be tested from another terminal with `curl`:

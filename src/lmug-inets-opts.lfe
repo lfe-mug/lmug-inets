@@ -12,8 +12,9 @@
 
 (defun default-modules ()
   "The default EWSAPI modules."
-  '(mod_alias mod_auth mod_esi mod_actions mod_cgi mod_dir mod_get mod_head
-    mod_log mod_disk_log lmug-inets))
+  ;;'(mod_alias mod_auth mod_esi mod_actions mod_cgi mod_dir mod_get mod_head
+  ;;mod_log mod_disk_log lmug-inets))
+  '(lmug-inets))
 
 (defun minimal-modules ()
   "The default EWSAPI modules."
